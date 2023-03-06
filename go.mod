@@ -5,6 +5,8 @@ go 1.20
 require (
 	github.com/gin-gonic/gin v1.7.4
 	gitlab.com/mihael97/Go-utility v0.0.0-20230305211358-7d93b89714b2
+	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
 require (
@@ -28,5 +30,4 @@ require (
 	golang.org/x/sys v0.0.0-20211031064116-611d5d643895 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
