@@ -17,7 +17,7 @@ func (*proxyController) GetBasePath() string {
 
 func (p *proxyController) GetRoutes() map[routes.Route]func(ctx *gin.Context) {
 	return map[routes.Route]func(ctx *gin.Context){
-		routes.CreateRoute("/**", web.ALL, true): p.proxyRequests,
+		routes.CreateRoute("/*route", web.ALL, true): p.proxyRequests,
 	}
 }
 
