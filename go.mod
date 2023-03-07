@@ -6,7 +6,6 @@ require (
 	github.com/gin-gonic/gin v1.7.4
 	gitlab.com/mihael97/Go-utility v0.0.0-20230305211358-7d93b89714b2
 	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
 require (
