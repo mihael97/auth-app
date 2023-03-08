@@ -19,50 +19,50 @@ jobs:
         with:
           name: main
           path: ./main
-  stopService:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Stop service
-        uses: garygrossgarten/github-action-ssh@release
-        with:
-          command: sudo service auth-service stop
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          privateKey: ${{ secrets.SSH_KEY }}
-  deploy:
-    runs-on: ubuntu-latest
-    needs: stopService
-    steps:
-    - uses: actions/checkout@master
-    - uses: actions/download-artifact@master
-      name: Download artifacts
-      with:
-        name: main
-        path: ./main
-    - name: Copy artifact
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: main
-        remote: /app/auth
-        host: ${{ secrets.DEPLOY_HOST }}
-        username: ${{ secrets.DEPLOY_USER }}
-        privateKey: ${{ secrets.SSH_KEY }}
-    - name: Start service
-      uses: garygrossgarten/github-action-ssh@release
-      with:
-        command: chmod +x /app/auth/main
-        host: ${{ secrets.DEPLOY_HOST }}
-        username: ${{ secrets.DEPLOY_USER }}
-        privateKey: ${{ secrets.SSH_KEY }}
-  startService:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Start service
-        uses: garygrossgarten/github-action-ssh@release
-        with:
-          command: sudo service auth-service start
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          privateKey: ${{ secrets.SSH_KEY }}
+  # stopService:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Stop service
+  #       uses: garygrossgarten/github-action-ssh@release
+  #       with:
+  #         command: sudo service auth-service stop
+  #         host: ${{ secrets.DEPLOY_HOST }}
+  #         username: ${{ secrets.DEPLOY_USER }}
+  #         privateKey: ${{ secrets.SSH_KEY }}
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: stopService
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - uses: actions/download-artifact@master
+  #     name: Download artifacts
+  #     with:
+  #       name: main
+  #       path: ./main
+  #   - name: Copy artifact
+  #     uses: garygrossgarten/github-action-scp@release
+  #     with:
+  #       local: main
+  #       remote: /app/auth
+  #       host: ${{ secrets.DEPLOY_HOST }}
+  #       username: ${{ secrets.DEPLOY_USER }}
+  #       privateKey: ${{ secrets.SSH_KEY }}
+  #   - name: Start service
+  #     uses: garygrossgarten/github-action-ssh@release
+  #     with:
+  #       command: chmod +x /app/auth/main
+  #       host: ${{ secrets.DEPLOY_HOST }}
+  #       username: ${{ secrets.DEPLOY_USER }}
+  #       privateKey: ${{ secrets.SSH_KEY }}
+  # startService:
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   steps:
+  #     - name: Start service
+  #       uses: garygrossgarten/github-action-ssh@release
+  #       with:
+  #         command: sudo service auth-service start
+  #         host: ${{ secrets.DEPLOY_HOST }}
+  #         username: ${{ secrets.DEPLOY_USER }}
+  #         privateKey: ${{ secrets.SSH_KEY }}
