@@ -10,7 +10,6 @@ import (
 func InitializeRoutes(engine *gin.Engine) {
 	controllers := []routes.RoutesController{
 		GetProxyController(),
-		GetLoginController(),
 	}
 
 	log.Print("Adding controller routes")
