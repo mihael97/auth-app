@@ -18,7 +18,7 @@ import (
 var proxyControllerImpl *proxyController
 
 type proxyController struct {
-	loginController *gin.Engine
+	routingTable map[string]*gin.Engine
 }
 
 func (*proxyController) GetBasePath() string {
@@ -56,8 +56,9 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 func (p *proxyController) proxyRequests(ctx *gin.Context) {
 	path := ctx.Request.URL.Path
 
-	if strings.HasPrefix(path, "/api/login") {
-		p.loginController.HandleContext(ctx)
+	searchPath := strings.Join(strings.Split(path, "/")[0:3], ",")
+	if router, exits := p.routingTable[searchPath]; !exits {
+		router.HandleContext(ctx)
 		return
 	}
 
@@ -90,7 +91,7 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 func GetProxyController() routes.RoutesController {
 	if proxyControllerImpl == nil {
 		proxyControllerImpl = &proxyController{
-			GetLoginController(),
+			map[string]*gin.Engine{"/api/login": GetLoginController()},
 		}
 	}
 	return proxyControllerImpl

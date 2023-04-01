@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/mihael97/auth-proxy/src/dao"
-	"github.com/mihael97/auth-proxy/src/dto"
+	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/model"
 	"gitlab.com/mihael97/Go-utility/src/util"
 )
@@ -18,7 +18,7 @@ type userServiceImpl struct {
 	customerRoleDao dao.CustomerRoleDao
 }
 
-func (s *userServiceImpl) CreateUser(request dto.CreateUserDto, username string) (*model.User, error) {
+func (s *userServiceImpl) CreateUser(request user.CreateUserDto, username string) (*user.UserDto, error) {
 	if len(request.Roles) == 0 {
 		request.Roles = []string{string(model.USER)}
 	} else if util.Contains(model.ADMIN.String(), request.Roles...) {
@@ -48,7 +48,13 @@ func (s *userServiceImpl) CreateUser(request dto.CreateUserDto, username string)
 	log.Printf("Created roles (%s) for %s\n", strings.Join(request.Roles, ","), username)
 
 	createdUser.Roles = request.Roles
-	return createdUser, nil
+	return &user.UserDto{
+		Id:        createdUser.Id,
+		Username:  createdUser.Username,
+		CreatedOn: createdUser.CreatedOn,
+		IsDeleted: createdUser.IsDeleted,
+		Roles:     createdUser.Roles,
+	}, nil
 }
 
 func GetUserService() UserService {

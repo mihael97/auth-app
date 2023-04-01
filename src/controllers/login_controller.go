@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mihael97/auth-proxy/src/dto"
+	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/services"
 	"gitlab.com/mihael97/Go-utility/src/web"
 )
@@ -17,7 +17,7 @@ type loginController struct {
 }
 
 func (c *loginController) loginUser(ctx *gin.Context) {
-	var request dto.LoginUserDto
+	var request user.LoginUserDto
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
 		web.WriteError(err, ctx)
 		return

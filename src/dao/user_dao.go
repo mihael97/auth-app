@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/mihael97/auth-proxy/src/dto"
+	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/model"
 	"gitlab.com/mihael97/Go-utility/src/database"
 	"gitlab.com/mihael97/Go-utility/src/util/mapper"
@@ -27,7 +27,7 @@ func (r *userDao) GetUser(username string) (*model.User, error) {
 	return r.mapper.MapItem(rows)
 }
 
-func (d *userDao) CreateUser(request dto.CreateUserDto) (*model.User, error) {
+func (d *userDao) CreateUser(request user.CreateUserDto) (*model.User, error) {
 	log.Println("Saving user")
 	response, err := database.GetDatabase().Query(InsertUser, request.Username, request.Password)
 	if err != nil {

@@ -1,13 +1,13 @@
 package services
 
-import "github.com/mihael97/auth-proxy/src/dto"
+import "github.com/mihael97/auth-proxy/src/dto/user"
 
 var loginService *loginServiceImpl
 
 type loginServiceImpl struct {
 }
 
-func (*loginServiceImpl) Login(request dto.LoginUserDto) error {
+func (*loginServiceImpl) Login(request user.LoginUserDto) error {
 	panic("unimplemented")
 }
 

@@ -1,14 +1,11 @@
 package services
 
-import (
-	"github.com/mihael97/auth-proxy/src/dto"
-	"github.com/mihael97/auth-proxy/src/model"
-)
+import "github.com/mihael97/auth-proxy/src/dto/user"
 
 type LoginService interface {
-	Login(request dto.LoginUserDto) error
+	Login(request user.LoginUserDto) error
 }
 
 type UserService interface {
-	CreateUser(request dto.CreateUserDto, username string) (*model.User, error)
+	CreateUser(request user.CreateUserDto, username string) (*user.UserDto, error)
 }
