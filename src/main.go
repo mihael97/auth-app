@@ -7,11 +7,20 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mihael97/auth-proxy/src/controllers"
-	"gitlab.com/mihael97/Go-utility/src/env"
+	config "github.com/mihael97/auth-proxy/src/util"
 )
 
 func main() {
-	port := env.GetEnvVariable("HTTP_PORT", "8080")
+	config := config.GetConfig()
+
+	var port string
+
+	if config.Port != nil {
+		port = *config.Port
+	} else {
+		port = "8080"
+	}
+
 	log.Printf("Auth proxy starting at port %s", port)
 
 	router := gin.Default()

@@ -1,0 +1,21 @@
+version: "3"
+services:
+  db:
+    image: bitnami/postgresql
+    container_name: auth_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USERNAME=auth
+      - POSTGRESQL_PASSWORD=auth
+      - POSTGRESQL_DATABASE=auth
+    network_mode: host
+  flyway:
+    image: flyway/flyway
+    container_name: auth_flyway
+    command: -url=jdbc:postgresql://localhost:5432/auth -schemas=auth -user=auth -password=auth -connectRetries=60 migrate
+    volumes:
+      - ./flyway/:/flyway/sql/:Z
+    network_mode: host
+    depends_on:
+      - db

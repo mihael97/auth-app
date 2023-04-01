@@ -2,39 +2,41 @@ package controllers
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mihael97/auth-proxy/src/dto"
+	"github.com/mihael97/auth-proxy/src/services"
 	"gitlab.com/mihael97/Go-utility/src/web"
-	"gitlab.com/mihael97/Go-utility/src/web/routes"
 )
 
 var loginControllerImpl *loginController
 
 type loginController struct {
-}
-
-func (*loginController) GetBasePath() string {
-	return "/login"
-}
-
-func (c *loginController) GetRoutes() map[routes.Route]func(ctx *gin.Context) {
-	return map[routes.Route]func(ctx *gin.Context){
-		routes.CreateRoute("/", web.POST, false): c.loginUser,
-	}
+	loginService services.LoginService
 }
 
 func (c *loginController) loginUser(ctx *gin.Context) {
-	var request dto.CreateUserDto
+	var request dto.LoginUserDto
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
 		web.WriteError(err, ctx)
 		return
 	}
+	err := c.loginService.Login(request)
+	if err != nil {
+		web.WriteError(err, ctx)
+		return
+	}
+	ctx.Status(http.StatusNoContent)
 }
 
-func GetLoginController() routes.RoutesController {
+func GetLoginController() *gin.Engine {
 	if loginControllerImpl == nil {
-		loginControllerImpl = &loginController{}
+		loginControllerImpl = &loginController{loginService: services.GetLoginService()}
 	}
-	return loginControllerImpl
+	engine := gin.New()
+
+	group := engine.Group("/api/login")
+	group.POST("/", loginControllerImpl.loginUser)
+	return engine
 }
