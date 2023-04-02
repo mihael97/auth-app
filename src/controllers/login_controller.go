@@ -22,11 +22,12 @@ func (c *loginController) loginUser(ctx *gin.Context) {
 		web.WriteError(err, ctx)
 		return
 	}
-	err := c.loginService.Login(request)
+	token, err := c.loginService.Login(request)
 	if err != nil {
 		web.WriteError(err, ctx)
 		return
 	}
+	ctx.Writer.Header().Add("Authorization", *token)
 	ctx.Status(http.StatusNoContent)
 }
 
