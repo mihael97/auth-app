@@ -9,6 +9,7 @@ import (
 	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/model"
 	"gitlab.com/mihael97/Go-utility/src/util"
+	"gitlab.com/mihael97/Go-utility/src/util/mapper"
 )
 
 var userService *userServiceImpl
@@ -16,6 +17,17 @@ var userService *userServiceImpl
 type userServiceImpl struct {
 	userRepository  dao.UserDao
 	customerRoleDao dao.CustomerRoleDao
+	dtoMapper       mapper.Mapper[model.User, user.UserDto]
+}
+
+func (s *userServiceImpl) GetUser(username string) (*user.UserDto, error) {
+	fetchedUser, err := s.userRepository.GetUser(username)
+	if err != nil {
+		return nil, err
+	} else if fetchedUser == nil {
+		return nil, nil
+	}
+	return s.dtoMapper.MapItem(*fetchedUser), nil
 }
 
 func (s *userServiceImpl) CreateUser(request user.CreateUserDto, username string) (*user.UserDto, error) {
@@ -62,6 +74,15 @@ func GetUserService() UserService {
 		userService = &userServiceImpl{
 			dao.GetUserDao(),
 			dao.GetCustomerRoleDao(),
+			mapper.GetGenericMapper(func(item model.User) user.UserDto {
+				return user.UserDto{
+					Id:        item.Id,
+					Username:  item.Username,
+					CreatedOn: item.CreatedOn,
+					IsDeleted: item.IsDeleted,
+					Roles:     item.Roles,
+				}
+			}),
 		}
 	}
 	return userService
