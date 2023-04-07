@@ -1,12 +1,15 @@
 package dao
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
 	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/model"
 	"gitlab.com/mihael97/Go-utility/src/database"
+	"gitlab.com/mihael97/Go-utility/src/util"
 	"gitlab.com/mihael97/Go-utility/src/util/mapper"
 )
 
@@ -19,12 +22,23 @@ type userDao struct {
 	mapper mapper.DatabaseMapper[model.User]
 }
 
+func (r *userDao) mapRow(row *sql.Rows, item *model.User) (err error) {
+	err = row.Scan(&item.Id, &item.Username, &item.Password, &item.CreatedOn, &item.IsDeleted)
+	return
+}
+
 func (r *userDao) GetUser(username string) (*model.User, error) {
 	rows, err := database.GetDatabase().Query(GetUser, username)
 	if err != nil {
 		return nil, err
 	}
-	return r.mapper.MapItem(rows)
+	items, err := r.mapper.ScanRows(rows, r.mapRow)
+	if err != nil {
+		return nil, err
+	} else if len(items) == 0 {
+		return nil, nil
+	}
+	return util.GetPointer(items[0]), nil
 }
 
 func (d *userDao) CreateUser(request user.CreateUserDto) (*model.User, error) {
@@ -34,6 +48,9 @@ func (d *userDao) CreateUser(request user.CreateUserDto) (*model.User, error) {
 		return nil, err
 	}
 	var id string
+	if !response.Next() {
+		return nil, fmt.Errorf("invalid database response")
+	}
 	err = response.Scan(&id)
 	if err != nil {
 		return nil, err

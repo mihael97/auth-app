@@ -6,7 +6,7 @@ import (
 	"gitlab.com/mihael97/Go-utility/src/database"
 )
 
-const InsertCustomerRole = "INSERT INTO customer_role(NAME, USER_ID) VALUES ($1, $2)"
+const InsertCustomerRole = "INSERT INTO customer_roles(ROLE_NAME, USER_ID) VALUES ($1, $2)"
 
 var customerRoleDao *customerRoleDaoImpl
 
@@ -19,7 +19,7 @@ func (*customerRoleDaoImpl) CreateCustomerRole(id string, roles ...string) error
 		return err
 	}
 	for _, role := range roles {
-		_, err = tx.Exec(InsertCustomerRole, role)
+		_, err = tx.Exec(InsertCustomerRole, role, id)
 		if err != nil {
 			log.Printf("Error during adding role %s for %s\n", role, id)
 			return err

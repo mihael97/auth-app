@@ -31,6 +31,14 @@ func (s *userServiceImpl) GetUser(username string) (*user.UserDto, error) {
 }
 
 func (s *userServiceImpl) CreateUser(request user.CreateUserDto, username string) (*user.UserDto, error) {
+	//check if already exists
+	existingUser, err := s.userRepository.GetUser(request.Username)
+	if err != nil {
+		return nil, err
+	} else if existingUser != nil {
+		return nil, fmt.Errorf("username already exists")
+	}
+
 	if len(request.Roles) == 0 {
 		request.Roles = []string{string(model.USER)}
 	} else if util.Contains(model.ADMIN.String(), request.Roles...) {

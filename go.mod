@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.0
-	gitlab.com/mihael97/Go-utility v0.0.0-20230305211358-7d93b89714b2
+	gitlab.com/mihael97/Go-utility v0.0.0-20230328173515-625d35b5783c
 	gopkg.in/yaml.v2 v2.4.0
 )
 
