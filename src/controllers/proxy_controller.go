@@ -56,8 +56,8 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 func (p *proxyController) proxyRequests(ctx *gin.Context) {
 	path := ctx.Request.URL.Path
 
-	searchPath := strings.Join(strings.Split(path, "/")[0:3], ",")
-	if router, exits := p.routingTable[searchPath]; !exits {
+	searchPath := strings.Join(strings.Split(path, "/")[0:3], "/")
+	if router, exits := p.routingTable[searchPath]; exits {
 		router.HandleContext(ctx)
 		return
 	}
