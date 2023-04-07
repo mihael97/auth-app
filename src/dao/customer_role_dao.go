@@ -7,10 +7,29 @@ import (
 )
 
 const InsertCustomerRole = "INSERT INTO customer_roles(ROLE_NAME, USER_ID) VALUES ($1, $2)"
+const GetUserRoles = "SELECT ROLE_NAME FROM customer_roles WHERE USER_ID = $1"
 
 var customerRoleDao *customerRoleDaoImpl
 
 type customerRoleDaoImpl struct {
+}
+
+func (*customerRoleDaoImpl) GetUserRoles(id string) ([]string, error) {
+	rows, err := database.GetDatabase().Query(GetUserRoles, id)
+	if err != nil {
+		return nil, err
+	}
+	var roles []string
+	var roleName string
+
+	for rows.Next() {
+		if err := rows.Scan(&roleName); err != nil {
+			return nil, err
+		}
+		roles = append(roles, roleName)
+	}
+
+	return roles, nil
 }
 
 func (*customerRoleDaoImpl) CreateCustomerRole(id string, roles ...string) error {

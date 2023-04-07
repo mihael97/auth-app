@@ -12,4 +12,5 @@ type UserDao interface {
 
 type CustomerRoleDao interface {
 	CreateCustomerRole(id string, roles ...string) error
+	GetUserRoles(id string) ([]string, error)
 }

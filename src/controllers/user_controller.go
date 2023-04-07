@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,20 @@ func (u *userControllerImpl) createUser(ctx *gin.Context) {
 	web.ParseToJson(createdUser, ctx, http.StatusCreated)
 }
 
+func (u *userControllerImpl) getUserInfo(ctx *gin.Context) {
+	currentUsername := u.parseUsername(ctx)
+	if currentUsername == nil {
+		log.Println("username is null")
+		web.ParseToJson(pointerUtil.CreateValidationException(map[string][]string{"username": {"username is empty"}}), ctx, http.StatusBadRequest)
+	}
+	userDto, err := u.userService.GetUser(*currentUsername)
+	if err != nil {
+		web.WriteError(err, ctx)
+		return
+	}
+	web.ParseToJson(userDto, ctx, http.StatusOK)
+}
+
 func (u *userControllerImpl) parseUsername(ctx *gin.Context) *string {
 	username, err := jwt.GetUserNameFromToken(ctx, *util.GetConfig().Security.Secret)
 	if err != nil {
@@ -60,5 +75,6 @@ func GetUserController() *gin.Engine {
 	engine := gin.New()
 	group := engine.Group("/api/users")
 	group.POST("/", userController.createUser)
+	group.GET("/me", userController.getUserInfo)
 	return engine
 }

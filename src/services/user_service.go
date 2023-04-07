@@ -27,6 +27,10 @@ func (s *userServiceImpl) GetUser(username string) (*user.UserDto, error) {
 	} else if fetchedUser == nil {
 		return nil, nil
 	}
+	fetchedUser.Roles, err = s.customerRoleDao.GetUserRoles(fetchedUser.Id)
+	if err != nil {
+		return nil, err
+	}
 	return s.dtoMapper.MapItem(*fetchedUser), nil
 }
 
