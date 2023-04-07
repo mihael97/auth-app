@@ -185,8 +185,6 @@ github.com/ugorji/go/codec v1.2.11 h1:BMaWp1Bb6fHwEtbplGBGJ498wD+LKlNSl25MjdZY4d
 github.com/ugorji/go/codec v1.2.11/go.mod h1:UNopzCgEMSXjBc6AOMqYvWC1ktqTAfzJZUZgYf6w6lg=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/zenazn/goji v0.9.0/go.mod h1:7S9M489iMyHBNxwZnk9/EHS098H4/F6TATF2mIxtB1Q=
-gitlab.com/mihael97/Go-utility v0.0.0-20230305211358-7d93b89714b2 h1:5AM17BWZSz7gw69XGMvx1yrGNySreck56oHbkyiAMbE=
-gitlab.com/mihael97/Go-utility v0.0.0-20230305211358-7d93b89714b2/go.mod h1:QuO8uxAjUsGFOFf6HSl41f2uz5gCcg2viTwAEP9Td+c=
 gitlab.com/mihael97/Go-utility v0.0.0-20230328173515-625d35b5783c h1:UF94agcKKVSb6yKhDMd5u5d4MQ5ny2BxIf/Wpxlo7dM=
 gitlab.com/mihael97/Go-utility v0.0.0-20230328173515-625d35b5783c/go.mod h1:QuO8uxAjUsGFOFf6HSl41f2uz5gCcg2viTwAEP9Td+c=
 go.uber.org/atomic v1.3.2/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
