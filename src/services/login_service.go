@@ -27,6 +27,8 @@ func (s *loginServiceImpl) Login(request user.LoginUserDto) (*string, error) {
 	user, err := s.userRepository.GetUser(request.Username)
 	if err != nil {
 		return nil, err
+	} else if user == nil {
+		return nil, nil
 	}
 
 	// check password
@@ -39,9 +41,7 @@ func (s *loginServiceImpl) Login(request user.LoginUserDto) (*string, error) {
 		return nil, err
 	}
 
-	token, err := s.maker.CreateToken(request.Username, s.validityPeriod)
-
-	return token, nil
+	return s.maker.CreateToken(request.Username, s.validityPeriod)
 }
 
 func GetLoginService() LoginService {

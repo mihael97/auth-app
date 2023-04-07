@@ -91,7 +91,7 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 func GetProxyController() routes.RoutesController {
 	if proxyControllerImpl == nil {
 		proxyControllerImpl = &proxyController{
-			map[string]*gin.Engine{"/api/login": GetLoginController()},
+			map[string]*gin.Engine{"/api/login": GetLoginController(), "/api/users": GetUserController()},
 		}
 	}
 	return proxyControllerImpl
