@@ -15,6 +15,7 @@ import (
 
 const InsertUser = "INSERT INTO USERS(USERNAME, PASSWORD) VALUES($1, $2) RETURNING ID"
 const GetUser = "SELECT * FROM USERS WHERE username = $1"
+const GetUsers = "SELECT * FROM USERS"
 
 var userDaoImpl *userDao
 
@@ -25,6 +26,14 @@ type userDao struct {
 func (r *userDao) mapRow(row *sql.Rows, item *model.User) (err error) {
 	err = row.Scan(&item.Id, &item.Username, &item.Password, &item.CreatedOn, &item.IsDeleted)
 	return
+}
+
+func (r *userDao) GetAllUsers() ([]model.User, error) {
+	rows, err := database.GetDatabase().Query(GetUsers)
+	if err != nil {
+		return nil, err
+	}
+	return r.mapper.ScanRows(rows, r.mapRow)
 }
 
 func (r *userDao) GetUser(username string) (*model.User, error) {

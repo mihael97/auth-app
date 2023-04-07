@@ -42,6 +42,7 @@ func (u *userControllerImpl) getUserInfo(ctx *gin.Context) {
 	if currentUsername == nil {
 		log.Println("username is null")
 		web.ParseToJson(pointerUtil.CreateValidationException(map[string][]string{"username": {"username is empty"}}), ctx, http.StatusBadRequest)
+		return
 	}
 	userDto, err := u.userService.GetUser(*currentUsername)
 	if err != nil {
@@ -49,6 +50,15 @@ func (u *userControllerImpl) getUserInfo(ctx *gin.Context) {
 		return
 	}
 	web.ParseToJson(userDto, ctx, http.StatusOK)
+}
+
+func (u *userControllerImpl) getUsers(ctx *gin.Context) {
+	users, err := u.userService.GetUsers()
+	if err != nil {
+		web.WriteError(err, ctx)
+		return
+	}
+	web.ParseToJson(users, ctx, http.StatusOK)
 }
 
 func (u *userControllerImpl) parseUsername(ctx *gin.Context) *string {
@@ -76,5 +86,6 @@ func GetUserController() *gin.Engine {
 	group := engine.Group("/api/users")
 	group.POST("/", userController.createUser)
 	group.GET("/me", userController.getUserInfo)
+	group.GET("/", userController.getUsers)
 	return engine
 }

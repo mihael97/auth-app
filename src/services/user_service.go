@@ -7,9 +7,9 @@ import (
 
 	"github.com/mihael97/auth-proxy/src/dao"
 	"github.com/mihael97/auth-proxy/src/dto/user"
+	"github.com/mihael97/auth-proxy/src/mappers"
 	"github.com/mihael97/auth-proxy/src/model"
 	"gitlab.com/mihael97/Go-utility/src/util"
-	"gitlab.com/mihael97/Go-utility/src/util/mapper"
 )
 
 var userService *userServiceImpl
@@ -17,7 +17,15 @@ var userService *userServiceImpl
 type userServiceImpl struct {
 	userRepository  dao.UserDao
 	customerRoleDao dao.CustomerRoleDao
-	dtoMapper       mapper.Mapper[model.User, user.UserDto]
+	dtoMapper       mappers.UserMapper
+}
+
+func (s *userServiceImpl) GetUsers() ([]user.UserDto, error) {
+	users, err := s.userRepository.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+	return s.dtoMapper.MapItems(users), nil
 }
 
 func (s *userServiceImpl) GetUser(username string) (*user.UserDto, error) {
@@ -26,10 +34,6 @@ func (s *userServiceImpl) GetUser(username string) (*user.UserDto, error) {
 		return nil, err
 	} else if fetchedUser == nil {
 		return nil, nil
-	}
-	fetchedUser.Roles, err = s.customerRoleDao.GetUserRoles(fetchedUser.Id)
-	if err != nil {
-		return nil, err
 	}
 	return s.dtoMapper.MapItem(*fetchedUser), nil
 }
@@ -86,15 +90,7 @@ func GetUserService() UserService {
 		userService = &userServiceImpl{
 			dao.GetUserDao(),
 			dao.GetCustomerRoleDao(),
-			mapper.GetGenericMapper(func(item model.User) user.UserDto {
-				return user.UserDto{
-					Id:        item.Id,
-					Username:  item.Username,
-					CreatedOn: item.CreatedOn,
-					IsDeleted: item.IsDeleted,
-					Roles:     item.Roles,
-				}
-			}),
+			mappers.GetUserMapper(),
 		}
 	}
 	return userService
