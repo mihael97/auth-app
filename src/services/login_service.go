@@ -29,6 +29,9 @@ func (s *loginServiceImpl) Login(request user.LoginUserDto) (*string, error) {
 		return nil, err
 	} else if user == nil {
 		return nil, nil
+	} else if user.IsDeleted {
+		log.Printf("User %s exists but deleted\n", user.Id)
+		return nil, nil
 	}
 
 	// check password
