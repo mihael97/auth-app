@@ -108,9 +108,13 @@ func (p *proxyController) modifyHeaders(ctx *gin.Context, remove ...bool) bool {
 		ctx.Writer.Header().Del(RolesHeader)
 	} else {
 		username, err := jwt.GetUserNameFromToken(ctx, *util.GetConfig().Security.Secret)
-		userData, _ := p.userService.GetUser(username)
 		if err != nil {
 			log.Println("Error during parsing token", err)
+			return false
+		}
+		userData, err := p.userService.GetUser(username)
+		if err != nil {
+			log.Println("Error during fetching user info", err)
 			return false
 		}
 		ctx.Request.Header.Add(UsernameHeader, username)
