@@ -14,13 +14,24 @@ import (
 )
 
 const InsertUser = "INSERT INTO USERS(USERNAME, PASSWORD) VALUES($1, $2) RETURNING ID"
-const GetUser = "SELECT * FROM USERS WHERE username = $1"
-const GetUsers = "SELECT * FROM USERS"
+const GetUser = "SELECT * FROM USERS WHERE username = $1 AND is_deleted = false"
+const GetUsers = "SELECT * FROM USERS WHERE is_deleted = false"
+const DeleteUser = "UPDATE users SET is_deleted = NOT is_deleted WHERE id = $1"
 
 var userDaoImpl *userDao
 
 type userDao struct {
 	mapper mapper.DatabaseMapper[model.User]
+}
+
+func (*userDao) DeleteUser(id string) error {
+	result, err := database.GetDatabase().Exec(DeleteUser, id)
+	if err != nil {
+		return err
+	} else if rowsAffected, _ := result.RowsAffected(); rowsAffected != 1 {
+		return fmt.Errorf("wrong number of rows affected")
+	}
+	return nil
 }
 
 func (r *userDao) mapRow(row *sql.Rows, item *model.User) (err error) {

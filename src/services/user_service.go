@@ -20,6 +20,18 @@ type userServiceImpl struct {
 	dtoMapper       mappers.UserMapper
 }
 
+func (s *userServiceImpl) DeleteUser(id string, username string) error {
+	currentUser, err := s.GetUser(username)
+	if err != nil {
+		return err
+	} else if currentUser == nil {
+		return fmt.Errorf("user not found")
+	} else if !util.Contains("ADMIN", currentUser.Roles...) {
+		return fmt.Errorf("unsufficient role")
+	}
+	return s.userRepository.DeleteUser(id)
+}
+
 func (s *userServiceImpl) GetUsers() ([]user.UserDto, error) {
 	users, err := s.userRepository.GetAllUsers()
 	if err != nil {

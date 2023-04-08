@@ -61,6 +61,20 @@ func (u *userControllerImpl) getUsers(ctx *gin.Context) {
 	web.ParseToJson(users, ctx, http.StatusOK)
 }
 
+func (u *userControllerImpl) deleteUser(ctx *gin.Context) {
+	var request user.DeleteUserDto
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
+		web.WriteError(err, ctx)
+		return
+	}
+	err := u.userService.DeleteUser(request.Id, *u.parseUsername(ctx))
+	if err != nil {
+		web.WriteError(err, ctx)
+		return
+	}
+	ctx.Status(http.StatusNoContent)
+}
+
 func (u *userControllerImpl) parseUsername(ctx *gin.Context) *string {
 	username, err := jwt.GetUserNameFromToken(ctx, *util.GetConfig().Security.Secret)
 	if err != nil {
@@ -87,5 +101,6 @@ func GetUserController() *gin.Engine {
 	group.POST("/", userController.createUser)
 	group.GET("/me", userController.getUserInfo)
 	group.GET("/", userController.getUsers)
+	group.DELETE("/", userController.deleteUser)
 	return engine
 }

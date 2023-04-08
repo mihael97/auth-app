@@ -9,6 +9,7 @@ type UserDao interface {
 	CreateUser(request user.CreateUserDto) (*model.User, error)
 	GetUser(username string) (*model.User, error)
 	GetAllUsers() ([]model.User, error)
+	DeleteUser(id string) error
 }
 
 type CustomerRoleDao interface {
