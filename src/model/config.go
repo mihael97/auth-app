@@ -6,6 +6,9 @@ type Config struct {
 		ValidityPeriod *uint64 `yaml:"validityPerion"`
 		HeaderName     *string `yaml:"headerName"`
 	}
-	Port         *string        `yaml:"port"`
-	ProxyServers map[string]int `yaml:"proxyServers"`
+	Port         *string `yaml:"port"`
+	ProxyServers map[string]struct {
+		Port            *int
+		UnsecuredRoutes []string
+	} `yaml:"proxyServers"`
 }
