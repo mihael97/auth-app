@@ -2,4 +2,5 @@ port: 8080
 security:
   secret: heehyyuhiouerheueuncdhhcuifopofyft
 proxyServers:
-  backend: 8081
+  backend: 
+    port: 8081

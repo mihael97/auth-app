@@ -48,13 +48,13 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 	}
 	appName := parts[2]
 	config := util.GetConfig()
-	port, exists := config.ProxyServers[appName]
+	serverData, exists := config.ProxyServers[appName]
 	if !exists {
 		log.Printf("URL %s not found\n", appName)
 		return nil, false, nil
 	}
 	path = strings.ReplaceAll(path, "/"+appName, "")
-	newUrl := fmt.Sprintf("http://localhost:%d%s/", port, path)
+	newUrl := fmt.Sprintf("http://localhost:%d%s/", *serverData.Port, path)
 	log.Println("New url is ", newUrl)
 	newPath, err := url.Parse(newUrl)
 	return newPath, true, err
