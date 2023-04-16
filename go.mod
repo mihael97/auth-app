@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.0
-	gitlab.com/mihael97/Go-utility v0.0.0-20230416090737-6e21643e7830
+	gitlab.com/mihael97/Go-utility v0.0.0-20230416095433-266f2d25e214
 	golang.org/x/crypto v0.7.0
 	gopkg.in/yaml.v2 v2.4.0
 )
