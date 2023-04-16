@@ -8,7 +8,7 @@ type Config struct {
 	}
 	Port         *string `yaml:"port"`
 	ProxyServers map[string]struct {
-		Port            *int
-		UnsecuredRoutes []string
+		Port          *int
+		SecuredRoutes map[string]map[string][]string
 	} `yaml:"proxyServers"`
 }
