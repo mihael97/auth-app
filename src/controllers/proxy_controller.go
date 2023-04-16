@@ -17,9 +17,6 @@ import (
 	"gitlab.com/mihael97/Go-utility/src/web/security/jwt"
 )
 
-const UsernameHeader = "X-MACUKA-USERNAME"
-const RolesHeader = "X-MACUKA-ROLES"
-
 var proxyControllerImpl *proxyController
 
 type proxyController struct {
@@ -46,14 +43,18 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 	if len(parts) < 2 || parts[1] != "api" {
 		return nil, false, fmt.Errorf("path doesn't start with /api")
 	}
-	appName := parts[2]
+	appName, err := GetAppName(ctx)
+	if err != nil {
+		return nil, false, err
+	}
+
 	config := util.GetConfig()
-	serverData, exists := config.ProxyServers[appName]
+	serverData, exists := config.ProxyServers[*appName]
 	if !exists {
-		log.Printf("URL %s not found\n", appName)
+		log.Printf("URL %s not found\n", *appName)
 		return nil, false, nil
 	}
-	path = strings.ReplaceAll(path, "/"+appName, "")
+	path = strings.ReplaceAll(path, fmt.Sprintf("/%s", *appName), "")
 	newUrl := fmt.Sprintf("http://localhost:%d%s/", *serverData.Port, path)
 	log.Println("New url is ", newUrl)
 	newPath, err := url.Parse(newUrl)
@@ -86,6 +87,13 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 		web.WriteErrorMessage("error during modifiying headers", ctx)
 		return
 	}
+
+	// check if eligible
+	if !CheckIfEligible(ctx) {
+		ctx.Abort()
+		return
+	}
+
 	proxy.Director = func(req *http.Request) {
 		req.Header = ctx.Request.Header
 		req.Host = remote.Host
