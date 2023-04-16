@@ -51,7 +51,7 @@ func JwtMiddleware() func(ctx *gin.Context) {
 		}
 
 		route := ctx.FullPath()
-		if _, exists := appConfig.SecuredRoutes[route]; exists {
+		if _, exists := appConfig.SecuredRoutes[route]; len(appConfig.SecuredRoutes) == 0 || exists {
 			jwt.CheckSecurityToken(ctx, *secret)
 		} else {
 			log.Printf("Route %s is not secured\n", route)
@@ -71,36 +71,34 @@ func CheckIfEligible(ctx *gin.Context) bool {
 	if !exists {
 		ctx.Status(http.StatusNotFound)
 		return false
+	} else if len(appConfig.SecuredRoutes) == 0 {
+		return true
 	}
-	route := ctx.Request.URL.Path
+
 	appPath := ctx.FullPath()
-	securedMethod, exists := appConfig.SecuredRoutes[appPath]
-	if !exists {
-		log.Printf("Route %s is not secured\n", route)
+	securedMethod := appConfig.SecuredRoutes[appPath]
+	roles, exist := securedMethod[ctx.Request.Method]
+	if !exist {
+		log.Print("No additional roles check")
 	} else {
-		roles, exists := securedMethod[ctx.Request.Method]
-		if !exists {
-			log.Print("No additional roles check")
-		} else {
-			rolesHeader := ctx.Request.Header.Get(RolesHeader)
-			if len(rolesHeader) == 0 {
-				web.ParseToJson(
-					gin.H{"message": "header not found"},
-					ctx,
-					http.StatusUnauthorized,
-				)
-				ctx.Abort()
-				return false
-			}
-			if !goUtil.ContainsAny(roles, strings.Split(rolesHeader, ",")) {
-				web.ParseToJson(
-					gin.H{"message": "user doesn't have any eligible role for enter"},
-					ctx,
-					http.StatusForbidden,
-				)
-				ctx.Abort()
-				return false
-			}
+		rolesHeader := ctx.Request.Header.Get(RolesHeader)
+		if len(rolesHeader) == 0 {
+			web.ParseToJson(
+				gin.H{"message": "header not found"},
+				ctx,
+				http.StatusUnauthorized,
+			)
+			ctx.Abort()
+			return false
+		}
+		if !goUtil.ContainsAny(roles, strings.Split(rolesHeader, ",")) {
+			web.ParseToJson(
+				gin.H{"message": "user doesn't have any eligible role for enter"},
+				ctx,
+				http.StatusForbidden,
+			)
+			ctx.Abort()
+			return false
 		}
 	}
 	return true
