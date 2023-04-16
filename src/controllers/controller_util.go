@@ -10,7 +10,9 @@ import (
 	"github.com/mihael97/auth-proxy/src/util"
 	goUtil "gitlab.com/mihael97/Go-utility/src/util"
 	"gitlab.com/mihael97/Go-utility/src/web"
+	middlewares "gitlab.com/mihael97/Go-utility/src/web/middlewares/security"
 	"gitlab.com/mihael97/Go-utility/src/web/routes"
+	"gitlab.com/mihael97/Go-utility/src/web/security/jwt"
 )
 
 const UsernameHeader = "X-MACUKA-USERNAME"
@@ -21,8 +23,44 @@ func InitializeRoutes(engine *gin.Engine) {
 		GetProxyController(),
 	}
 
+	engine.Use(middlewares.CORSMiddleware())
+	engine.Use(JwtMiddleware())
+
 	log.Print("Adding controller routes")
 	routes.AddControllerRoutesWithFilter(false, engine, controllers)
+}
+
+func JwtMiddleware() func(ctx *gin.Context) {
+	secret := util.GetConfig().Security.Secret
+	return func(ctx *gin.Context) {
+		appName, err := GetAppName(ctx)
+		if err != nil {
+			log.Println(err)
+			ctx.Abort()
+			return
+		}
+		appConfig, exists := util.GetConfig().ProxyServers[*appName]
+		if !exists {
+			web.ParseToJson(
+				gin.H{"message": "app not found"},
+				ctx,
+				http.StatusNotFound,
+			)
+			ctx.Abort()
+			return
+		}
+
+		route := ctx.FullPath()
+		for _, unsecuredRoute := range appConfig.UnsecuredRoutes {
+			if unsecuredRoute == route {
+				log.Printf("Route %s is not secured\n", route)
+				ctx.Next()
+				return
+			}
+		}
+
+		jwt.CheckSecurityToken(ctx, *secret)
+	}
 }
 
 // CheckIfEligible Checks if user if eligible to access the endpoint with its roles
