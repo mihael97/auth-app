@@ -33,6 +33,9 @@ func InitializeRoutes(engine *gin.Engine) {
 func JwtMiddleware() func(ctx *gin.Context) {
 	secret := util.GetConfig().Security.Secret
 	return func(ctx *gin.Context) {
+		// remove public header
+		ctx.Request.Header.Del("public")
+
 		appName, err := GetAppName(ctx)
 		if err != nil {
 			log.Println(err)
@@ -40,22 +43,24 @@ func JwtMiddleware() func(ctx *gin.Context) {
 			return
 		}
 		appConfig, exists := util.GetConfig().ProxyServers[*appName]
-		if !exists {
-			web.ParseToJson(
-				gin.H{"message": "app not found"},
-				ctx,
-				http.StatusNotFound,
-			)
-			ctx.Abort()
-			return
-		}
 
-		route := ctx.FullPath()
-		if _, exists := appConfig.SecuredRoutes[route]; len(appConfig.SecuredRoutes) == 0 || exists {
-			jwt.CheckSecurityToken(ctx, *secret)
-		} else {
-			log.Printf("Route %s is not secured\n", route)
-			ctx.Next()
+		if exists {
+			route := strings.ReplaceAll(ctx.Request.URL.Path, fmt.Sprintf("/%s", *appName), "")
+			unsecuredRouteMethods, exists := appConfig.UnsecuredRoutes[route]
+			if exists {
+				if len(unsecuredRouteMethods) == 0 || goUtil.Contains(ctx.Request.Method, unsecuredRouteMethods...) {
+					log.Printf("Route %s is not secured\n", route)
+					ctx.Request.Header.Add("public", "true")
+					ctx.Next()
+					return
+				}
+			}
+			if _, exists := appConfig.SecuredRoutes[route]; len(appConfig.SecuredRoutes) == 0 || exists {
+				jwt.CheckSecurityToken(ctx, *secret)
+			} else {
+				log.Printf("Route %s is not secured\n", route)
+				ctx.Next()
+			}
 		}
 	}
 }

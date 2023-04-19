@@ -55,7 +55,11 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 		return nil, false, nil
 	}
 	path = strings.ReplaceAll(path, fmt.Sprintf("/%s", *appName), "")
-	newUrl := fmt.Sprintf("http://localhost:%d%s/", *serverData.Port, path)
+	endPath := ""
+	if len(parts) <= 4 {
+		endPath = "/"
+	}
+	newUrl := fmt.Sprintf("http://localhost:%d%s%s", *serverData.Port, path, endPath)
 	log.Println("New url is ", newUrl)
 	newPath, err := url.Parse(newUrl)
 	return newPath, true, err
@@ -115,6 +119,9 @@ func (p *proxyController) modifyHeaders(ctx *gin.Context, remove ...bool) bool {
 		ctx.Writer.Header().Del(UsernameHeader)
 		ctx.Writer.Header().Del(RolesHeader)
 	} else {
+		if len(ctx.Request.Header.Get("public")) != 0 {
+			return true
+		}
 		username, err := jwt.GetUserNameFromToken(ctx, *util.GetConfig().Security.Secret)
 		if err != nil {
 			log.Println("Error during parsing token", err)
