@@ -1,6 +1,8 @@
 package mappers
 
 import (
+	"log"
+
 	"github.com/mihael97/auth-proxy/src/dao"
 	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/model"
@@ -22,6 +24,7 @@ func (g *UserMapper) MapItem(row model.User) (dto *user.UserDto) {
 	var err error
 	dto.Roles, err = g.customerRoleDao.GetUserRoles(row.Id)
 	if err != nil {
+		log.Println(err)
 		return nil
 	}
 	return dto
