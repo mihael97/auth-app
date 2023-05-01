@@ -17,6 +17,7 @@ import (
 
 const UsernameHeader = "X-MACUKA-USERNAME"
 const RolesHeader = "X-MACUKA-ROLES"
+const IdHeader = "X-MACUKA_ID"
 
 func InitializeRoutes(engine *gin.Engine) {
 	controllers := []routes.RoutesController{

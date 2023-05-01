@@ -118,6 +118,7 @@ func (p *proxyController) modifyHeaders(ctx *gin.Context, remove ...bool) bool {
 	if len(remove) != 0 && remove[0] {
 		ctx.Writer.Header().Del(UsernameHeader)
 		ctx.Writer.Header().Del(RolesHeader)
+		ctx.Writer.Header().Del(IdHeader)
 	} else {
 		if len(ctx.Request.Header.Get("public")) != 0 {
 			return true
@@ -133,6 +134,7 @@ func (p *proxyController) modifyHeaders(ctx *gin.Context, remove ...bool) bool {
 			return false
 		}
 		ctx.Request.Header.Add(UsernameHeader, username)
+		ctx.Request.Header.Add(IdHeader, userData.Id)
 		ctx.Request.Header.Add(RolesHeader, strings.Join(userData.Roles, ","))
 	}
 	return true
