@@ -13,10 +13,10 @@ import (
 	"gitlab.com/mihael97/Go-utility/src/util/mapper"
 )
 
-const InsertUser = "INSERT INTO USERS(USERNAME, PASSWORD) VALUES($1, $2) RETURNING ID"
-const GetUser = "SELECT * FROM USERS WHERE username = $1 AND is_deleted = false"
-const GetUsers = "SELECT * FROM USERS WHERE is_deleted = false"
-const DeleteUser = "UPDATE users SET is_deleted = NOT is_deleted WHERE id = $1"
+const InsertUser = "INSERT INTO auth.users(USERNAME, PASSWORD) VALUES($1, $2) RETURNING ID"
+const GetUser = "SELECT * FROM auth.users WHERE username = $1 AND is_deleted = false"
+const GetUsers = "SELECT * FROM auth.users WHERE is_deleted = false"
+const DeleteUser = "UPDATE auth.users SET is_deleted = NOT is_deleted WHERE id = $1"
 
 var userDaoImpl *userDao
 
