@@ -6,8 +6,8 @@ import (
 	"gitlab.com/mihael97/Go-utility/src/database"
 )
 
-const InsertCustomerRole = "INSERT INTO customer_roles(ROLE_NAME, USER_ID) VALUES ($1, $2)"
-const GetUserRoles = "SELECT ROLE_NAME FROM customer_roles WHERE USER_ID = $1"
+const InsertCustomerRole = "INSERT INTO auth.customer_roles(ROLE_NAME, USER_ID) VALUES ($1, $2)"
+const GetUserRoles = "SELECT ROLE_NAME FROM auth.customer_roles WHERE USER_ID = $1"
 
 var customerRoleDao *customerRoleDaoImpl
 

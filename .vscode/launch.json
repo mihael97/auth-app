@@ -12,9 +12,9 @@
             "program": "./src/main.go",
             "env": {
                 "PROXY_CONFIG": "${workspaceFolder}/development/local.yaml",
-                "DB_USERNAME": "auth",
-                "DB_PASSWORD": "auth",
-                "DB_URL": "jdbc:postgresql://localhost:5432/auth",
+                "DB_USERNAME": "backend",
+                "DB_PASSWORD": "backend",
+                "DB_URL": "jdbc:postgresql://localhost:5432/backend",
             }
         },
     ]
