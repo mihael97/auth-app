@@ -40,8 +40,8 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 		return nil, false, fmt.Errorf("path is empty")
 	}
 	parts := strings.Split(path, "/")
-	if len(parts) < 2 || parts[1] != "api" {
-		return nil, false, fmt.Errorf("path doesn't start with /api")
+	if len(parts) < 2 || parts[1] != "api" && parts[1] != "routes" {
+		return nil, false, fmt.Errorf("path doesn't start with /api or /routes")
 	}
 	appName, err := GetAppName(ctx)
 	if err != nil {
@@ -56,8 +56,11 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 	}
 	path = strings.ReplaceAll(path, fmt.Sprintf("/%s", *appName), "")
 	endPath := ""
-	if len(parts) <= 4 {
+	if len(parts) <= 4 && path != "/api/routes" {
 		endPath = "/"
+	}
+	if path == "/api/routes" {
+		path = strings.TrimPrefix(path, "/api")
 	}
 	newUrl := fmt.Sprintf("http://localhost:%d%s%s", *serverData.Port, path, endPath)
 	log.Println("New url is ", newUrl)

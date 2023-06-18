@@ -48,6 +48,14 @@ func JwtMiddleware() func(ctx *gin.Context) {
 		if exists {
 			route := strings.ReplaceAll(ctx.Request.URL.Path, fmt.Sprintf("/%s", *appName), "")
 			unsecuredRouteMethods, exists := appConfig.UnsecuredRoutes[route]
+
+			if route == "/api/routes" {
+				ctx.Request.Header.Add("public", "true")
+				log.Println("Accessing routes")
+				ctx.Next()
+				return
+			}
+
 			if exists {
 				if len(unsecuredRouteMethods) == 0 || goUtil.Contains(ctx.Request.Method, unsecuredRouteMethods...) {
 					log.Printf("Route %s is not secured\n", route)
