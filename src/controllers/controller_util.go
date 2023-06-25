@@ -47,14 +47,15 @@ func JwtMiddleware() func(ctx *gin.Context) {
 
 		if exists {
 			route := strings.ReplaceAll(ctx.Request.URL.Path, fmt.Sprintf("/%s", *appName), "")
-			unsecuredRouteMethods, exists := appConfig.UnsecuredRoutes[route]
-
 			if route == "/api/routes" {
 				ctx.Request.Header.Add("public", "true")
 				log.Println("Accessing routes")
 				ctx.Next()
 				return
 			}
+
+			route = strings.TrimPrefix(route, "/api")
+			unsecuredRouteMethods, exists := appConfig.UnsecuredRoutes[route]
 
 			if exists {
 				if len(unsecuredRouteMethods) == 0 || goUtil.Contains(ctx.Request.Method, unsecuredRouteMethods...) {
@@ -64,7 +65,7 @@ func JwtMiddleware() func(ctx *gin.Context) {
 					return
 				}
 			}
-			if _, exists := appConfig.SecuredRoutes[route]; len(appConfig.SecuredRoutes) == 0 || exists {
+			if exists := appConfig.IsSecured(route); len(appConfig.SecuredRoutes) == 0 || exists {
 				jwt.CheckSecurityToken(ctx, *secret)
 			} else {
 				log.Printf("Route %s is not secured\n", route)
@@ -89,8 +90,8 @@ func CheckIfEligible(ctx *gin.Context) bool {
 		return true
 	}
 
-	appPath := ctx.FullPath()
-	securedMethod := appConfig.SecuredRoutes[appPath]
+	appPath := ctx.Request.URL.Path
+	securedMethod := appConfig.GetSecuredMethods(appPath)
 	roles, exist := securedMethod[ctx.Request.Method]
 	if !exist {
 		log.Print("No additional roles check")

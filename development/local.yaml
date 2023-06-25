@@ -1,6 +1,5 @@
 port: 8080
 security:
   secret: heehyyuhiouerheueuncdhhcuifopofyft
-proxyServers:
-  backend: 
-    port: 8081
+backends:
+  backend: "http://localhost:8081"
