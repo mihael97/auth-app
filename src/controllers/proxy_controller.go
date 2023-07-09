@@ -12,6 +12,7 @@ import (
 	"github.com/mihael97/auth-proxy/src/services"
 	"github.com/mihael97/auth-proxy/src/util"
 	exceptionUtil "gitlab.com/mihael97/Go-utility/src/util"
+	goUtil "gitlab.com/mihael97/Go-utility/src/util"
 	"gitlab.com/mihael97/Go-utility/src/web"
 	"gitlab.com/mihael97/Go-utility/src/web/routes"
 	"gitlab.com/mihael97/Go-utility/src/web/security/jwt"
@@ -73,6 +74,19 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 
 	searchPath := strings.Join(strings.Split(path, "/")[0:3], "/")
 	if router, exits := p.routingTable[searchPath]; exits {
+		modifyHeadersStatus := p.modifyHeaders(ctx)
+		if !modifyHeadersStatus {
+			web.WriteErrorMessage("error during modifiying headers", ctx)
+			return
+		}
+		requestUri := ctx.Request.RequestURI
+		if strings.HasPrefix(requestUri, "/api/users") && requestUri != "/api/users/me" {
+			roles := ctx.Request.Header.Get(RolesHeader)
+			if !goUtil.Contains("ADMIN", roles) {
+				ctx.AbortWithStatus(http.StatusForbidden)
+				return
+			}
+		}
 		router.HandleContext(ctx)
 		return
 	}
