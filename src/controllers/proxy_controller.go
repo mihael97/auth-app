@@ -74,13 +74,13 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 
 	searchPath := strings.Join(strings.Split(path, "/")[0:3], "/")
 	if router, exits := p.routingTable[searchPath]; exits {
-		modifyHeadersStatus := p.modifyHeaders(ctx)
-		if !modifyHeadersStatus {
-			web.WriteErrorMessage("error during modifiying headers", ctx)
-			return
-		}
 		requestUri := ctx.Request.RequestURI
 		if strings.HasPrefix(requestUri, "/api/users") && requestUri != "/api/users/me" {
+			modifyHeadersStatus := p.modifyHeaders(ctx)
+			if !modifyHeadersStatus {
+				web.WriteErrorMessage("error during modifiying headers", ctx)
+				return
+			}
 			roles := ctx.Request.Header.Get(RolesHeader)
 			if !goUtil.Contains("ADMIN", roles) {
 				ctx.AbortWithStatus(http.StatusForbidden)
