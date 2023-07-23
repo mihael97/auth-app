@@ -3,3 +3,4 @@ security:
   secret: heehyyuhiouerheueuncdhhcuifopofyft
 backends:
   backend: "http://localhost:8081"
+  investment: "http://localhost:8082"

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ import (
 const UsernameHeader = "X-MACUKA-USERNAME"
 const RolesHeader = "X-MACUKA-ROLES"
 const IdHeader = "X-MACUKA-ID"
+const SwaggerResources = "/swagger/*"
 
 func InitializeRoutes(engine *gin.Engine) {
 	controllers := []routes.RoutesController{
@@ -57,7 +59,7 @@ func JwtMiddleware() func(ctx *gin.Context) {
 			route = strings.TrimPrefix(route, "/api")
 			unsecuredRouteMethods, exists := appConfig.UnsecuredRoutes[route]
 
-			if exists {
+			if ok, _ := regexp.Match(SwaggerResources, []byte(route)); ok || exists {
 				if len(unsecuredRouteMethods) == 0 || goUtil.Contains(ctx.Request.Method, unsecuredRouteMethods...) {
 					log.Printf("Route %s is not secured\n", route)
 					ctx.Request.Header.Add("public", "true")
