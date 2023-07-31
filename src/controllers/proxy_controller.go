@@ -124,19 +124,19 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 	}
 
 	proxy.ServeHTTP(ctx.Writer, ctx.Request)
-	p.modifyHeaders(ctx, true)
+	p.modifyHeaders(ctx, false)
 	if ctx.Writer.Status() == http.StatusBadGateway {
 		web.WriteErrorMessage("error during proxying", ctx)
 	}
 }
 
 // Add username and roles header
-func (p *proxyController) modifyHeaders(ctx *gin.Context, remove ...bool) bool {
-	if len(remove) != 0 && remove[0] {
-		ctx.Writer.Header().Del(UsernameHeader)
-		ctx.Writer.Header().Del(RolesHeader)
-		ctx.Writer.Header().Del(IdHeader)
-	} else {
+func (p *proxyController) modifyHeaders(ctx *gin.Context, add ...bool) bool {
+	ctx.Writer.Header().Del(UsernameHeader)
+	ctx.Writer.Header().Del(RolesHeader)
+	ctx.Writer.Header().Del(IdHeader)
+
+	if len(add) == 0 || add[0] {
 		if len(ctx.Request.Header.Get("public")) != 0 {
 			return true
 		}

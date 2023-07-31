@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="run" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="auth-proxy" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="DB_PASSWORD" value="backend" />
+      <env name="DB_URL" value="jdbc:postgresql://localhost:5432/backend" />
+      <env name="DB_USERNAME" value="backend" />
+      <env name="PROXY_CONFIG" value="development/local.yaml" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/mihael97/auth-proxy/src" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/src/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
