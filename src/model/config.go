@@ -12,6 +12,15 @@ type ProxyServer struct {
 	UnsecuredRoutes map[string][]string            `yaml:"unsecuredRoutes"`
 }
 
+type BackendServerConfig struct {
+	Enabled *bool  `yaml:"enabled"`
+	Url     string `yaml:"url"`
+}
+
+func (c BackendServerConfig) IsEnabled() bool {
+	return c.Enabled == nil || *c.Enabled
+}
+
 func (p ProxyServer) GetSecuredMethods(url string) map[string][]string {
 	for key, value := range p.SecuredRoutes {
 		if p.isMatch(key, url) {
@@ -65,8 +74,8 @@ func (p ProxyServer) IsSecured(url string) bool {
 }
 
 type Config struct {
-	Security     SecurityConfig         `yaml:"security"`
-	Port         *string                `yaml:"port"`
-	Backends     map[string]string      `yaml:"backends"`
-	ProxyServers map[string]ProxyServer `yaml:"proxyServers"`
+	Security     SecurityConfig                 `yaml:"security"`
+	Port         *string                        `yaml:"port"`
+	Backends     map[string]BackendServerConfig `yaml:"backends"`
+	ProxyServers map[string]ProxyServer         `yaml:"proxyServers"`
 }

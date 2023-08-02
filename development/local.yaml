@@ -2,5 +2,7 @@ port: 8080
 security:
   secret: heehyyuhiouerheueuncdhhcuifopofyft
 backends:
-  backend: "http://localhost:8081"
-  investment: "http://localhost:8082"
+  backend:
+    url: http://localhost:8081
+  investment:
+    url: http://localhost:8082

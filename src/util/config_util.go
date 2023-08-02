@@ -41,9 +41,13 @@ func readConfigFile(config *model.Config) {
 	}
 
 	config.ProxyServers = make(map[string]model.ProxyServer, 0)
-	for name, path := range config.Backends {
+	for name, backendConfig := range config.Backends {
+		if !backendConfig.IsEnabled() {
+			log.Printf("%s is disabled", backendConfig.Url)
+			continue
+		}
 		client := http.DefaultClient
-		url := fmt.Sprintf("%s/routes", path)
+		url := fmt.Sprintf("%s/routes", backendConfig.Url)
 		response, err := client.Get(url)
 		if err != nil {
 			log.Panic(err)
