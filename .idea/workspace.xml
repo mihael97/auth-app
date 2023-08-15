@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c79487db-bec8-40e2-ad6c-ad359027f821" name="Changes" comment="[#31] App headers always removed">
+    <list default="true" id="c79487db-bec8-40e2-ad6c-ad359027f821" name="Changes" comment="[#33] Backend disabled">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/development/local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/development/local.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/config_util.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/config_util.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,6 +18,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file:///usr/lib/go/src/runtime/panic.go" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -60,25 +62,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[#31] App headers always removed" />
-    <option name="LAST_COMMIT_MESSAGE" value="[#31] App headers always removed" />
+    <MESSAGE value="[#33] Backend disabled" />
+    <option name="LAST_COMMIT_MESSAGE" value="[#33] Backend disabled" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/util/config_util.go</url>
-          <line>24</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/util/config_util.go</url>
-          <line>43</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
