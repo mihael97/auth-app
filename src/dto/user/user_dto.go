@@ -8,4 +8,5 @@ type UserDto struct {
 	CreatedOn time.Time `json:"createdOn"`
 	IsDeleted bool      `json:"isDeleted"`
 	Roles     []string  `json:"roles"`
+	Email     *string   `json:"email,omitempty"`
 }

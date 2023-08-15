@@ -1,9 +1,9 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/mihael97/auth-proxy/src/dao"
@@ -38,7 +38,7 @@ func (s *loginServiceImpl) Login(request user.LoginUserDto) (*string, error) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
 	if err != nil {
 		log.Printf("Error during login for user %s\n%v", request.Username, err)
-		if strings.HasPrefix(err.Error(), "crypto/bcrypt: hashed password is not the hash of the given password") {
+		if is := errors.As(err, &bcrypt.ErrMismatchedHashAndPassword); is {
 			return nil, fmt.Errorf("invalid login")
 		}
 		return nil, err

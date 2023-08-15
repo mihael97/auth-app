@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/mihael97/auth-proxy/src/dto/passwordRecovery"
 	"log"
 	"net/http"
 
@@ -18,8 +19,9 @@ import (
 var userController *userControllerImpl
 
 type userControllerImpl struct {
-	userService services.UserService
-	headerName  string
+	userService  services.UserService
+	loginService services.LoginService
+	headerName   string
 }
 
 func (u *userControllerImpl) createUser(ctx *gin.Context) {
@@ -84,6 +86,53 @@ func (u *userControllerImpl) parseUsername(ctx *gin.Context) *string {
 	return pointerUtil.GetPointer(username)
 }
 
+func (u *userControllerImpl) sendRecoveryEmail(context *gin.Context) {
+	var request user.SendPasswordRecoveryDto
+
+	if err := json.NewDecoder(context.Request.Body).Decode(&request); err != nil {
+		web.WriteError(err, context)
+		return
+	}
+
+	err := u.userService.SendRecoveryEmail(request)
+	if err != nil {
+		web.WriteError(err, context)
+		return
+	}
+	context.Status(http.StatusNoContent)
+}
+
+func (u *userControllerImpl) passwordRecovery(context *gin.Context) {
+	var request passwordRecovery.PasswordRecoveryRequest
+	if err := json.NewDecoder(context.Request.Body).Decode(&request); err != nil {
+		web.WriteError(err, context)
+		return
+	}
+
+	username, err := u.userService.ChangePassword(request)
+	if err != nil {
+		web.WriteError(err, context)
+		return
+	}
+
+	u.loginUser(*username, request.NewPassword, context)
+}
+
+func (u *userControllerImpl) loginUser(username, password string, ctx *gin.Context) {
+	loginRequest := user.LoginUserDto{
+		Username: username,
+		Password: password,
+	}
+	token, err := u.loginService.Login(loginRequest)
+	if err != nil {
+		web.WriteError(err, ctx)
+		return
+	}
+
+	ctx.Writer.Header().Add("Authorization", *token)
+	ctx.Status(http.StatusNoContent)
+}
+
 func GetUserController() *gin.Engine {
 	if userController == nil {
 		headerName := util.GetConfig().Security.HeaderName
@@ -92,6 +141,7 @@ func GetUserController() *gin.Engine {
 		}
 		userController = &userControllerImpl{
 			services.GetUserService(),
+			services.GetLoginService(),
 			*headerName,
 		}
 	}
@@ -102,5 +152,7 @@ func GetUserController() *gin.Engine {
 	group.GET("/me", userController.getUserInfo)
 	group.GET("/", userController.getUsers)
 	group.DELETE("/", userController.deleteUser)
+	group.POST("/recovery", userController.passwordRecovery)
+	group.POST("/recovery/email", userController.sendRecoveryEmail)
 	return engine
 }

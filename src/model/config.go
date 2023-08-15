@@ -17,6 +17,19 @@ type BackendServerConfig struct {
 	Url     string `yaml:"url"`
 }
 
+type EmailConfig struct {
+	ServerConfig struct {
+		Host   *string
+		Port   *string
+		Secret *string `yaml:"secret"`
+	} `yaml:"serverConfig"`
+	From *string `yaml:"from"`
+}
+
+type PasswordRecoveryConfig struct {
+	Url *string
+}
+
 func (c BackendServerConfig) IsEnabled() bool {
 	return c.Enabled == nil || *c.Enabled
 }
@@ -74,8 +87,10 @@ func (p ProxyServer) IsSecured(url string) bool {
 }
 
 type Config struct {
-	Security     SecurityConfig                 `yaml:"security"`
-	Port         *string                        `yaml:"port"`
-	Backends     map[string]BackendServerConfig `yaml:"backends"`
-	ProxyServers map[string]ProxyServer         `yaml:"proxyServers"`
+	Security         SecurityConfig                 `yaml:"security"`
+	Port             *string                        `yaml:"port"`
+	Backends         map[string]BackendServerConfig `yaml:"backends"`
+	ProxyServers     map[string]ProxyServer         `yaml:"proxyServers"`
+	EmailConfig      EmailConfig                    `yaml:"emailConfig"`
+	PasswordRecovery PasswordRecoveryConfig         `yaml:"passwordRecovery"`
 }
