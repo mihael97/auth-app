@@ -10,7 +10,7 @@ import (
 )
 
 type UserMapper struct {
-	mapper.GenericMapper[model.User, user.UserDto]
+	mapper.Mapper[model.User, user.UserDto]
 	customerRoleDao dao.CustomerRoleDao
 }
 
@@ -20,6 +20,7 @@ func (g *UserMapper) MapItem(row model.User) (dto *user.UserDto) {
 		Username:  row.Username,
 		CreatedOn: row.CreatedOn,
 		IsDeleted: row.IsDeleted,
+		Email:     row.Email,
 	}
 	var err error
 	dto.Roles, err = g.customerRoleDao.GetUserRoles(row.Id)

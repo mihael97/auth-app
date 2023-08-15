@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"gitlab.com/mihael97/Go-utility/src/util"
 	"log"
 	"net/http"
 	"os"
@@ -42,6 +43,29 @@ func readConfigFile(config *model.Config) {
 	}
 
 	appendBackends(config)
+	appendEmailConfig(config)
+	appendPasswordRecovery(config)
+}
+
+func appendPasswordRecovery(c *model.Config) {
+	if c.PasswordRecovery.Url == nil {
+		c.PasswordRecovery.Url = util.GetPointer("http://localhost:3000")
+	}
+}
+
+func appendEmailConfig(c *model.Config) {
+	if c.EmailConfig.From == nil {
+		c.EmailConfig.From = util.GetPointer("mihaelmacuka2@gmail.com")
+	}
+	if c.EmailConfig.ServerConfig.Secret == nil {
+		log.Panic("Email secret should be provided")
+	}
+	if c.EmailConfig.ServerConfig.Host == nil {
+		c.EmailConfig.ServerConfig.Host = util.GetPointer("smtp.gmail.com")
+	}
+	if c.EmailConfig.ServerConfig.Port == nil {
+		c.EmailConfig.ServerConfig.Port = util.GetPointer("587")
+	}
 }
 
 func appendBackends(config *model.Config) {
