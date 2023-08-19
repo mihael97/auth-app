@@ -24,20 +24,20 @@ type loginServiceImpl struct {
 }
 
 func (s *loginServiceImpl) Login(request user.LoginUserDto) (*string, error) {
-	user, err := s.userRepository.GetUser(request.Username)
+	fetchedUser, err := s.userRepository.GetUser(request.Username)
 	if err != nil {
 		return nil, err
-	} else if user == nil {
+	} else if fetchedUser == nil {
 		return nil, nil
-	} else if user.IsDeleted {
-		log.Printf("User %s exists but deleted\n", user.Id)
+	} else if fetchedUser.IsDeleted {
+		log.Printf("User %s exists but deleted\n", fetchedUser.Id)
 		return nil, nil
 	}
 
 	// check password
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(fetchedUser.Password), []byte(request.Password))
 	if err != nil {
-		log.Printf("Error during login for user %s\n%v", request.Username, err)
+		log.Printf("Error during login for fetchedUser %s\n%v", request.Username, err)
 		if is := errors.As(err, &bcrypt.ErrMismatchedHashAndPassword); is {
 			return nil, fmt.Errorf("invalid login")
 		}

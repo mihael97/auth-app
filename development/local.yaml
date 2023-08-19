@@ -6,3 +6,6 @@ backends:
     url: http://localhost:8081
   investment:
     url: http://localhost:8082
+emailConfig:
+  serverConfig:
+    secret: my-secret
