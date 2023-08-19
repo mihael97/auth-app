@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/mihael97/auth-proxy/src/security"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -21,8 +22,9 @@ import (
 var proxyControllerImpl *proxyController
 
 type proxyController struct {
-	routingTable map[string]*gin.Engine
-	userService  services.UserService
+	routingTable            map[string]*gin.Engine
+	userService             services.UserService
+	permittedUsersEndpoints []string
 }
 
 func (*proxyController) GetBasePath() string {
@@ -44,7 +46,7 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 	if len(parts) < 2 || parts[1] != "api" && parts[1] != "routes" {
 		return nil, false, fmt.Errorf("path doesn't start with /api or /routes")
 	}
-	appName, err := GetAppName(ctx)
+	appName, err := util.GetAppName(ctx)
 	if err != nil {
 		return nil, false, err
 	}
@@ -75,13 +77,13 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 	searchPath := strings.Join(strings.Split(path, "/")[0:3], "/")
 	if router, exists := p.routingTable[searchPath]; exists {
 		requestUri := ctx.Request.RequestURI
-		if strings.HasPrefix(requestUri, "/api/users") && !strings.HasPrefix(requestUri, "/api/users/recovery") && requestUri != "/api/users/me" {
+		if strings.HasPrefix(requestUri, "/api/users") && !p.isEndpointPermittedForAll(requestUri) {
 			modifyHeadersStatus := p.modifyHeaders(ctx)
 			if !modifyHeadersStatus {
 				web.WriteErrorMessage("error during modifiying headers", ctx)
 				return
 			}
-			roles := strings.Split(ctx.Request.Header.Get(RolesHeader), ",")
+			roles := strings.Split(ctx.Request.Header.Get(security.RolesHeader), ",")
 			if !goUtil.Contains("ADMIN", roles...) {
 				ctx.AbortWithStatus(http.StatusForbidden)
 				return
@@ -110,7 +112,7 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 	}
 
 	// check if eligible
-	if !CheckIfEligible(ctx) {
+	if !security.CheckIfEligible(ctx) {
 		ctx.Abort()
 		return
 	}
@@ -132,9 +134,10 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 
 // Add username and roles header
 func (p *proxyController) modifyHeaders(ctx *gin.Context, add ...bool) bool {
-	ctx.Writer.Header().Del(UsernameHeader)
-	ctx.Writer.Header().Del(RolesHeader)
-	ctx.Writer.Header().Del(IdHeader)
+	ctx.Writer.Header().Del(security.UsernameHeader)
+	ctx.Writer.Header().Del(security.RolesHeader)
+	ctx.Writer.Header().Del(security.IdHeader)
+	ctx.Writer.Header().Del(security.ExpiresAtHeader)
 
 	if len(add) == 0 || add[0] {
 		if len(ctx.Request.Header.Get("public")) != 0 {
@@ -150,11 +153,21 @@ func (p *proxyController) modifyHeaders(ctx *gin.Context, add ...bool) bool {
 			log.Println("Error during fetching user info", err)
 			return false
 		}
-		ctx.Request.Header.Add(UsernameHeader, username)
-		ctx.Request.Header.Add(IdHeader, userData.Id)
-		ctx.Request.Header.Add(RolesHeader, strings.Join(userData.Roles, ","))
+		ctx.Request.Header.Add(security.UsernameHeader, username)
+		ctx.Request.Header.Add(security.IdHeader, userData.Id)
+		ctx.Request.Header.Add(security.RolesHeader, strings.Join(userData.Roles, ","))
+		appendExpiresAt(ctx)
 	}
 	return true
+}
+
+func (p *proxyController) isEndpointPermittedForAll(requestPath string) bool {
+	for _, route := range p.permittedUsersEndpoints {
+		if strings.HasPrefix(requestPath, route) {
+			return true
+		}
+	}
+	return false
 }
 
 func GetProxyController() routes.RoutesController {
@@ -162,6 +175,7 @@ func GetProxyController() routes.RoutesController {
 		proxyControllerImpl = &proxyController{
 			map[string]*gin.Engine{"/api/login": GetLoginController(), "/api/users": GetUserController()},
 			services.GetUserService(),
+			[]string{"/api/users/recovery", "/api/users/me"},
 		}
 	}
 	return proxyControllerImpl

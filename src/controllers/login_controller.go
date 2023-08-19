@@ -3,13 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/mihael97/auth-proxy/src/dto/user"
 	"github.com/mihael97/auth-proxy/src/services"
 	exceptionUtil "gitlab.com/mihael97/Go-utility/src/util"
 	"gitlab.com/mihael97/Go-utility/src/web"
+	"net/http"
 )
 
 var loginControllerImpl *loginController
@@ -36,6 +35,7 @@ func (c *loginController) loginUser(ctx *gin.Context) {
 		return
 	}
 	ctx.Writer.Header().Add("Authorization", *token)
+	appendExpiresAt(ctx)
 	ctx.Status(http.StatusNoContent)
 }
 
