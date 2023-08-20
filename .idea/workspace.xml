@@ -8,7 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/development/local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/development/local.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/controller_util.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/controller_util.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/proxy_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/proxy_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/login_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/login_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/user_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/security/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/security/util.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +26,14 @@
   </component>
   <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.20" />
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="mmacuka &lt;mihaelmacuka2@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="35-retry-connection-to-backend" />
+        <entry key="$PROJECT_DIR$" value="21-add-cookies" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -43,14 +50,16 @@
     <option name="onto" value="dbea76a17586be97b3e507f45308c11bb19d1c18" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file:///usr/lib/go/src/runtime/panic.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/gitlab.com/mihael97/!go-utility@v0.0.0-20230723185951-1a2583e7ddd9/src/web/security/jwt/jwt_maker.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/gitlab.com/mihael97/!go-utility@v0.0.0-20230723185951-1a2583e7ddd9/src/web/security/jwt/jwt_security_util.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/gitlab.com/mihael97/!go-utility@v0.0.0-20230723185951-1a2583e7ddd9/src/web/security/jwt/types.go" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2T7GvV3vfovh9lUnCrVk8aMUYyz" />
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
@@ -70,7 +79,7 @@
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "21-add-cookies",
+    "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "last_opened_file_path": "/home/mmacuka/Apps/personal-app/auth-app",
@@ -86,6 +95,7 @@
   <component name="Push.Settings">
     <force-push-targets>
       <force-push-target remote-path="origin" branch="37-user-registration-process" />
+      <force-push-target remote-path="origin" branch="21-add-cookies" />
     </force-push-targets>
   </component>
   <component name="RecentsManager">
@@ -158,21 +168,6 @@
           <url>file://$USER_HOME$/go/pkg/mod/gitlab.com/mihael97/!go-utility@v0.0.0-20230723185951-1a2583e7ddd9/src/web/security/jwt/types.go</url>
           <line>9</line>
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/controllers/user_controller.go</url>
-          <line>42</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/controllers/proxy_controller.go</url>
-          <line>79</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/controllers/proxy_controller.go</url>
-          <line>165</line>
-          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

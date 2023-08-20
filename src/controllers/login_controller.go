@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mihael97/auth-proxy/src/dto/user"
+	"github.com/mihael97/auth-proxy/src/security"
 	"github.com/mihael97/auth-proxy/src/services"
 	exceptionUtil "gitlab.com/mihael97/Go-utility/src/util"
 	"gitlab.com/mihael97/Go-utility/src/web"
@@ -34,7 +35,7 @@ func (c *loginController) loginUser(ctx *gin.Context) {
 		web.ParseToJson(exception, ctx, http.StatusUnauthorized)
 		return
 	}
-	ctx.Writer.Header().Add("Authorization", *token)
+	ctx.Writer.Header().Add(security.AuthorizationHeader, *token)
 	appendExpiresAt(ctx)
 	ctx.Status(http.StatusNoContent)
 }
