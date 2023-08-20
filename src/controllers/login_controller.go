@@ -37,6 +37,7 @@ func (c *loginController) loginUser(ctx *gin.Context) {
 	}
 	ctx.Writer.Header().Add(security.AuthorizationHeader, *token)
 	appendExpiresAt(ctx)
+	ctx.Request.Header.Del(security.AuthorizationHeader)
 	ctx.Status(http.StatusNoContent)
 }
 
