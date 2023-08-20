@@ -14,6 +14,7 @@ const UsernameHeader = "X-MACUKA-USERNAME"
 const RolesHeader = "X-MACUKA-ROLES"
 const IdHeader = "X-MACUKA-ID"
 const ExpiresAtHeader = "X-MACUKA-EXPIRES-AT"
+const AuthorizationHeader = "Authorization"
 
 // CheckIfEligible Checks if user is eligible to access the endpoint with its roles
 func CheckIfEligible(ctx *gin.Context) bool {

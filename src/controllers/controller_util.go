@@ -27,12 +27,14 @@ func InitializeRoutes(engine *gin.Engine) {
 }
 
 func appendExpiresAt(ctx *gin.Context) {
-	if len(ctx.Request.Header.Get("Authorization")) == 0 {
-		authorizationHeader := ctx.Writer.Header().Get("Authorization")
+	var remove = false
+	if len(ctx.Request.Header.Get(security.AuthorizationHeader)) == 0 {
+		remove = true
+		authorizationHeader := ctx.Writer.Header().Get(security.AuthorizationHeader)
 		if !strings.HasPrefix("Bearer", authorizationHeader) {
 			authorizationHeader = fmt.Sprintf("Bearer %s", authorizationHeader)
 		}
-		ctx.Request.Header.Add("Authorization", authorizationHeader)
+		ctx.Request.Header.Add(security.AuthorizationHeader, authorizationHeader)
 	}
 	maker, err := jwt.NewJwtMaker(*config.GetConfig().Security.Secret)
 	if err != nil {
@@ -46,4 +48,7 @@ func appendExpiresAt(ctx *gin.Context) {
 	}
 	expiresAtTime := payload.ExpiredAt.Unix()
 	ctx.Writer.Header().Add(security.ExpiresAtHeader, strconv.FormatInt(expiresAtTime, 10))
+	if remove {
+		ctx.Request.Header.Del(security.AuthorizationHeader)
+	}
 }

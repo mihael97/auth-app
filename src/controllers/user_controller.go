@@ -129,7 +129,7 @@ func (u *userControllerImpl) loginUser(username, password string, ctx *gin.Conte
 		return
 	}
 
-	ctx.Writer.Header().Add("Authorization", *token)
+	ctx.Writer.Header().Add(u.headerName, *token)
 	ctx.Status(http.StatusNoContent)
 }
 
