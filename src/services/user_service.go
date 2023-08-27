@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/mihael97/auth-proxy/src/dto/passwordRecovery"
 	config "github.com/mihael97/auth-proxy/src/util"
+	"gitlab.com/mihael97/Go-utility/src/util/mapper"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"strconv"
@@ -27,7 +28,7 @@ type userServiceImpl struct {
 	userRepository          dao.UserDao
 	passwordRecoveryService PasswordRecoveryService
 	customerRoleDao         dao.CustomerRoleDao
-	dtoMapper               mappers.UserMapper
+	dtoMapper               mapper.Mapper[model.User, user.UserDto]
 }
 
 func (s *userServiceImpl) ChangePassword(request passwordRecovery.PasswordRecoveryRequest) (*string, error) {
