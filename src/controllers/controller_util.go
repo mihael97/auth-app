@@ -3,8 +3,11 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/mihael97/auth-proxy/docs"
 	"github.com/mihael97/auth-proxy/src/security"
 	config "github.com/mihael97/auth-proxy/src/util"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gitlab.com/mihael97/Go-utility/src/web"
 	middlewares "gitlab.com/mihael97/Go-utility/src/web/middlewares/security"
 	"gitlab.com/mihael97/Go-utility/src/web/routes"
@@ -24,6 +27,15 @@ func InitializeRoutes(engine *gin.Engine) {
 
 	log.Print("Adding controller routes")
 	routes.AddControllerRoutesWithFilter(false, engine, controllers)
+}
+
+func InitSwagger() *gin.Engine {
+	docs.SwaggerInfo.BasePath = "/api"
+	docs.SwaggerInfo.Title = fmt.Sprintf("Auth backend")
+	swaggerPath := "/api/swagger/*any"
+	engine := gin.New()
+	engine.GET(swaggerPath, ginSwagger.WrapHandler(swaggerFiles.Handler))
+	return engine
 }
 
 func appendExpiresAt(ctx *gin.Context) {

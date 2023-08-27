@@ -1,0 +1,172 @@
+definitions:
+  passwordRecovery.PasswordRecoveryRequest:
+    properties:
+      attemptId:
+        type: string
+      newPassword:
+        type: string
+    type: object
+  user.CreateUserDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      username:
+        type: string
+    type: object
+  user.DeleteUserDto:
+    properties:
+      id:
+        type: string
+    type: object
+  user.LoginUserDto:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  user.SendPasswordRecoveryDto:
+    properties:
+      username:
+        type: string
+    type: object
+  user.UserDto:
+    properties:
+      createdOn:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      isDeleted:
+        type: boolean
+      roles:
+        items:
+          type: string
+        type: array
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginUserDto'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      summary: Login user
+      tags:
+      - login
+  /users:
+    delete:
+      parameters:
+      - description: Delete request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.DeleteUserDto'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+      summary: Delete user
+      tags:
+      - user
+    get:
+      responses:
+        "200":
+          description: Created user
+          schema:
+            items:
+              $ref: '#/definitions/user.UserDto'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Get users
+      tags:
+      - user
+    post:
+      parameters:
+      - description: Create request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUserDto'
+      responses:
+        "201":
+          description: Created user
+          schema:
+            $ref: '#/definitions/user.UserDto'
+        "400":
+          description: Bad Request
+      summary: Create user
+      tags:
+      - user
+  /users/me:
+    get:
+      responses:
+        "200":
+          description: Created user
+          schema:
+            $ref: '#/definitions/user.UserDto'
+        "400":
+          description: Bad Request
+      summary: Get current user info
+      tags:
+      - user
+  /users/recovery:
+    post:
+      parameters:
+      - description: Delete request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/passwordRecovery.PasswordRecoveryRequest'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+      summary: Password recovery
+      tags:
+      - user
+  /users/recovery/email:
+    post:
+      parameters:
+      - description: Send password recovery email request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.SendPasswordRecoveryDto'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+      summary: Password recovery email
+      tags:
+      - user
+swagger: "2.0"

@@ -18,6 +18,13 @@ type loginController struct {
 	loginService services.LoginService
 }
 
+// @Summary Login user
+// @Tags login
+// @Param request body user.LoginUserDto true "Login request"
+// @Success 204
+// @Failure 400
+// @Failure 401
+// @Router /login [post]
 func (c *loginController) loginUser(ctx *gin.Context) {
 	var request user.LoginUserDto
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {

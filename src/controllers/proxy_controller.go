@@ -173,7 +173,7 @@ func (p *proxyController) isEndpointPermittedForAll(requestPath string) bool {
 func GetProxyController() routes.RoutesController {
 	if proxyControllerImpl == nil {
 		proxyControllerImpl = &proxyController{
-			map[string]*gin.Engine{"/api/login": GetLoginController(), "/api/users": GetUserController()},
+			map[string]*gin.Engine{"/api/login": GetLoginController(), "/api/users": GetUserController(), "/api/swagger": InitSwagger()},
 			services.GetUserService(),
 			[]string{"/api/users/recovery", "/api/users/me"},
 		}

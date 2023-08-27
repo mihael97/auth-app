@@ -14,39 +14,21 @@ type UserMapper struct {
 	customerRoleDao dao.CustomerRoleDao
 }
 
-func (g *UserMapper) MapItem(row model.User) (dto *user.UserDto) {
-	dto = &user.UserDto{
-		Id:        row.Id,
-		Username:  row.Username,
-		CreatedOn: row.CreatedOn,
-		IsDeleted: row.IsDeleted,
-		Email:     row.Email,
-	}
-	var err error
-	dto.Roles, err = g.customerRoleDao.GetUserRoles(row.Id)
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	return dto
-}
-
-func (g *UserMapper) MapItems(rows []model.User) []user.UserDto {
-	users := make([]user.UserDto, len(rows))
-
-	for i := range rows {
-		mappedValue := g.MapItem(rows[i])
-		if mappedValue == nil {
+func GetUserMapper() mapper.Mapper[model.User, user.UserDto] {
+	return mapper.GetDefaultMapper(func(item model.User) *user.UserDto {
+		mappedItem := &user.UserDto{
+			Id:        item.Id,
+			Username:  item.Username,
+			CreatedOn: item.CreatedOn,
+			IsDeleted: item.IsDeleted,
+			Email:     item.Email,
+		}
+		var err error
+		item.Roles, err = dao.GetCustomerRoleDao().GetUserRoles(item.Id)
+		if err != nil {
+			log.Println(err)
 			return nil
 		}
-		users[i] = *mappedValue
-	}
-
-	return users
-}
-
-func GetUserMapper() UserMapper {
-	return UserMapper{
-		customerRoleDao: dao.GetCustomerRoleDao(),
-	}
+		return mappedItem
+	})
 }

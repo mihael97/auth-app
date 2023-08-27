@@ -24,6 +24,12 @@ type userControllerImpl struct {
 	headerName   string
 }
 
+// @Summary Create user
+// @Tags user
+// @Param request body user.CreateUserDto true "Create request"
+// @Success 201 {object} user.UserDto "Created user"
+// @Failure 400
+// @Router /users [post]
 func (u *userControllerImpl) createUser(ctx *gin.Context) {
 	var request user.CreateUserDto
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
@@ -39,6 +45,11 @@ func (u *userControllerImpl) createUser(ctx *gin.Context) {
 	web.ParseToJson(createdUser, ctx, http.StatusCreated)
 }
 
+// @Summary Get current user info
+// @Tags user
+// @Success 200 {object} user.UserDto "Created user"
+// @Failure 400
+// @Router /users/me [get]
 func (u *userControllerImpl) getUserInfo(ctx *gin.Context) {
 	currentUsername := u.parseUsername(ctx)
 	if currentUsername == nil {
@@ -54,6 +65,11 @@ func (u *userControllerImpl) getUserInfo(ctx *gin.Context) {
 	web.ParseToJson(userDto, ctx, http.StatusOK)
 }
 
+// @Summary Get users
+// @Tags user
+// @Success 200 {object} []user.UserDto "Created user"
+// @Failure 400
+// @Router /users [get]
 func (u *userControllerImpl) getUsers(ctx *gin.Context) {
 	users, err := u.userService.GetUsers()
 	if err != nil {
@@ -63,6 +79,12 @@ func (u *userControllerImpl) getUsers(ctx *gin.Context) {
 	web.ParseToJson(users, ctx, http.StatusOK)
 }
 
+// @Summary Delete user
+// @Tags user
+// @Param request body user.DeleteUserDto true "Delete request"
+// @Success 204
+// @Failure 400
+// @Router /users [delete]
 func (u *userControllerImpl) deleteUser(ctx *gin.Context) {
 	var request user.DeleteUserDto
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
@@ -86,6 +108,12 @@ func (u *userControllerImpl) parseUsername(ctx *gin.Context) *string {
 	return pointerUtil.GetPointer(username)
 }
 
+// @Summary Password recovery email
+// @Tags user
+// @Param request body user.SendPasswordRecoveryDto true "Send password recovery email request"
+// @Success 204
+// @Failure 400
+// @Router /users/recovery/email [post]
 func (u *userControllerImpl) sendRecoveryEmail(context *gin.Context) {
 	var request user.SendPasswordRecoveryDto
 
@@ -102,6 +130,12 @@ func (u *userControllerImpl) sendRecoveryEmail(context *gin.Context) {
 	context.Status(http.StatusNoContent)
 }
 
+// @Summary Password recovery
+// @Tags user
+// @Param request body passwordRecovery.PasswordRecoveryRequest true "Delete request"
+// @Success 204
+// @Failure 400
+// @Router /users/recovery [post]
 func (u *userControllerImpl) passwordRecovery(context *gin.Context) {
 	var request passwordRecovery.PasswordRecoveryRequest
 	if err := json.NewDecoder(context.Request.Body).Decode(&request); err != nil {
