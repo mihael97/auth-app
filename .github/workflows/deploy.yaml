@@ -1,0 +1,35 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - stopService
+      - flyway
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/download-artifact@master
+        name: Download artifacts
+        with:
+          name: main
+          path: ./main
+      - name: Copy artifact
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: main
+          remote: /app/auth
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          privateKey: ${{ secrets.SSH_KEY }}
+      - name: Make service executable
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: chmod +x /app/auth/main
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          privateKey: ${{ secrets.SSH_KEY }}
