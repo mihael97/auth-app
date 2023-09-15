@@ -116,11 +116,11 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           privateKey: ${{ secrets.SSH_KEY }}
-    stopService:
+    startService:
       runs-on: ubuntu-latest
       needs: build
       steps:
-        - name: Stop service
+        - name: Start service
           uses: garygrossgarten/github-action-ssh@release
           with:
             command: sudo service auth-service start
