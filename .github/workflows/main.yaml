@@ -29,7 +29,7 @@ jobs:
           author_email: mihaelmacuka2@gmail.com
           message: ${{ env.COMMIT_MESSAGE }}
           add: 'docs/*'
-          push: true
+          push: origin main --force
   build:
     needs:
       - swagger
