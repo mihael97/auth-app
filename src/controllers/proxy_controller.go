@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,11 @@ import (
 	"gitlab.com/mihael97/Go-utility/src/web/routes"
 	"gitlab.com/mihael97/Go-utility/src/web/security/jwt"
 )
+
+const ApiVersionQueryParam = "apiVersion"
+const ApiVersionRegex = "[vV][0-9]+"
+const ApiVersionHeader = "MACUKA_API_VERSION"
+const ApiVersionV1 = "V1"
 
 var proxyControllerImpl *proxyController
 
@@ -46,6 +52,9 @@ func (p *proxyController) getRemoteUrl(ctx *gin.Context) (*url.URL, bool, error)
 	if len(parts) < 2 || parts[1] != "api" && parts[1] != "routes" {
 		return nil, false, fmt.Errorf("path doesn't start with /api or /routes")
 	}
+
+	p.parseVersion(ctx, &path)
+
 	appName, err := util.GetAppName(ctx)
 	if err != nil {
 		return nil, false, err
@@ -80,7 +89,7 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 		if strings.HasPrefix(requestUri, "/api/users") && !p.isEndpointPermittedForAll(requestUri) {
 			modifyHeadersStatus := p.modifyHeaders(ctx)
 			if !modifyHeadersStatus {
-				web.WriteErrorMessage("error during modifiying headers", ctx)
+				web.WriteErrorMessage("error during modifying headers", ctx)
 				return
 			}
 			roles := strings.Split(ctx.Request.Header.Get(security.RolesHeader), ",")
@@ -107,7 +116,7 @@ func (p *proxyController) proxyRequests(ctx *gin.Context) {
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	modifyHeadersStatus := p.modifyHeaders(ctx)
 	if !modifyHeadersStatus {
-		web.WriteErrorMessage("error during modifiying headers", ctx)
+		web.WriteErrorMessage("error during modifying headers", ctx)
 		return
 	}
 
@@ -168,6 +177,15 @@ func (p *proxyController) isEndpointPermittedForAll(requestPath string) bool {
 		}
 	}
 	return false
+}
+
+func (p *proxyController) parseVersion(ctx *gin.Context, path *string) {
+	apiVersion := ctx.Query(ApiVersionQueryParam)
+	match, _ := regexp.MatchString(ApiVersionRegex, apiVersion)
+	if !match {
+		apiVersion = ApiVersionV1
+	}
+	ctx.Request.Header.Set(ApiVersionHeader, apiVersion)
 }
 
 func GetProxyController() routes.RoutesController {
