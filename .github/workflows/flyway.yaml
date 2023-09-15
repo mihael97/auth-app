@@ -7,7 +7,6 @@ on:
 jobs:
   flyway:
     runs-on: ubuntu-latest
-    needs: stopService
     steps:
       - name: Copy Flyway files
         uses: appleboy/scp-action@v0.1.4
