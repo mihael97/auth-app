@@ -2,7 +2,7 @@ name: pipeline
 on:
   push:
     branches:
-      - main
+      - pipeline-fix
 
 jobs:
   swagger:
@@ -29,9 +29,8 @@ jobs:
           author_email: mihaelmacuka2@gmail.com
           message: ${{ env.COMMIT_MESSAGE }}
           add: 'docs/*'
-          push: true
+          push: origin ${GITHUB_REF##*/} --force
           fetch: true
-          pull: true
   build:
     needs:
       - swagger
