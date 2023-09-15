@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   swagger:
     runs-on: ubuntu-latest
