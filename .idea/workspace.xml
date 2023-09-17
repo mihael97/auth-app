@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c79487db-bec8-40e2-ad6c-ad359027f821" name="Changes" comment="[#42] Sentry init">
+    <list default="true" id="c79487db-bec8-40e2-ad6c-ad359027f821" name="Changes" comment="[#49] Enable Flyway">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/development/local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/development/local.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/proxy_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/proxy_controller.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +30,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="21-add-cookies" />
+        <entry key="$PROJECT_DIR$" value="49-enable-flyway" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -41,12 +39,12 @@
   <component name="GitRewordedCommitMessages">
     <option name="commitMessagesMapping">
       <RewordedCommitMessageMapping>
-        <option name="originalMessage" value="[#37] User email" />
-        <option name="rewordedMessage" value="[#37] Password change" />
+        <option name="originalMessage" value="Pipeline fix" />
+        <option name="rewordedMessage" value="Pipeline fix" />
       </RewordedCommitMessageMapping>
     </option>
     <option name="currentCommit" value="1" />
-    <option name="onto" value="dbea76a17586be97b3e507f45308c11bb19d1c18" />
+    <option name="onto" value="9f4ae53ef62820a45c8eac23cbde190d7e98d465" />
   </component>
   <component name="GithubProjectSettings">
     <option name="branchProtectionPatterns">
@@ -79,34 +77,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/mmacuka/Apps/personal-app/docker-compose.yaml&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "51-add-dockerfile",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/home/mmacuka/Apps/personal-app/docker-compose.yaml",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.general"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="Push.Settings">
     <force-push-targets>
       <force-push-target remote-path="origin" branch="37-user-registration-process" />
       <force-push-target remote-path="origin" branch="21-add-cookies" />
+      <force-push-target remote-path="origin" branch="pipeline-fix" />
     </force-push-targets>
   </component>
   <component name="RecentsManager">
@@ -162,7 +161,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="pipeline-fix" />
                       </list>
                     </value>
                   </entry>
@@ -185,7 +184,9 @@
     <MESSAGE value="[#40] Security header removed" />
     <MESSAGE value="[#42] Swagger init" />
     <MESSAGE value="[#42] Sentry init" />
-    <option name="LAST_COMMIT_MESSAGE" value="[#42] Sentry init" />
+    <MESSAGE value="Pipeline fix" />
+    <MESSAGE value="[#49] Enable Flyway" />
+    <option name="LAST_COMMIT_MESSAGE" value="[#49] Enable Flyway" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

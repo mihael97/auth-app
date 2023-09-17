@@ -1,0 +1,4 @@
+!flyway/**
+!src/**
+!go.*
+!docs
